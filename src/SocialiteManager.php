@@ -2,6 +2,7 @@
 
 namespace Laravel\Socialite;
 
+use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use Illuminate\Support\Manager;
 use Laravel\Socialite\One\TwitterProvider;
@@ -79,6 +80,20 @@ class SocialiteManager extends Manager implements Contracts\Factory
     }
 
     /**
+     * Create an instance of the specified driver.
+     *
+     * @return \Laravel\Socialite\Two\AbstractProvider
+     */
+    protected function createGeekEventsDriver()
+    {
+        $config = $this->app['config']['services.geekevents'];
+
+        return $this->buildProvider(
+          'Laravel\Socialite\GeekEventsProvider', $config
+        );
+    }
+
+    /**
      * Build an OAuth 2 provider instance.
      *
      * @param  string  $provider
@@ -88,8 +103,10 @@ class SocialiteManager extends Manager implements Contracts\Factory
     public function buildProvider($provider, $config)
     {
         return new $provider(
-            $this->app['request'], $config['client_id'],
-            $config['client_secret'], $config['redirect']
+            $this->app['request'],
+            Arr::get($config, 'client_id'),
+            Arr::get($config, 'client_secret'),
+            Arr::get($config, 'redirect')
         );
     }
 
