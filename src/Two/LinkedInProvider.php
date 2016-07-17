@@ -3,6 +3,7 @@
 namespace Laravel\Socialite\Two;
 
 use Illuminate\Support\Arr;
+use Laravel\Socialite\Contracts\ProviderInterface;
 
 class LinkedInProvider extends AbstractProvider implements ProviderInterface
 {

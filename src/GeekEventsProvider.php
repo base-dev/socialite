@@ -5,7 +5,7 @@ namespace Laravel\Socialite;
 use Illuminate\Support\Arr;
 use Laravel\Socialite\Two\User;
 use Laravel\Socialite\Two\AbstractProvider;
-use Laravel\Socialite\Two\ProviderInterface;
+use Laravel\Socialite\Contracts\ProviderInterface;
 
 /**
  * This is a custom provider for Geek Events

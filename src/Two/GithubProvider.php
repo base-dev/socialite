@@ -4,6 +4,7 @@ namespace Laravel\Socialite\Two;
 
 use Exception;
 use Illuminate\Support\Arr;
+use Laravel\Socialite\Contracts\ProviderInterface;
 
 class GithubProvider extends AbstractProvider implements ProviderInterface
 {

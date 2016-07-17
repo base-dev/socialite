@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use InvalidArgumentException;
 use League\OAuth1\Client\Server\Server;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Laravel\Socialite\Contracts\Provider as ProviderContract;
+use \Laravel\Socialite\Contracts\ProviderInterface;
 
-abstract class AbstractProvider implements ProviderContract
+abstract class AbstractProvider implements ProviderInterface
 {
     /**
      * The HTTP request instance.
