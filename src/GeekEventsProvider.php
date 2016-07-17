@@ -47,11 +47,12 @@ class GeekEventsProvider extends AbstractProvider implements ProviderInterface
         $timestamp = $req->get('timestamp');
         $token     = $req->get('token');
 
+        // TODO(nicolai): Refactor these two?
         $userinfo = $this->getHttpClient()->post('https://www.geekevents.org/sso/userinfo/', [
             'form_params' => [
-                'user_id' => $id,
+                'user_id'   => $id,
                 'timestamp' => $timestamp,
-                'token' => $token,
+                'token'     => $token,
             ],
         ]);
 
@@ -79,6 +80,8 @@ class GeekEventsProvider extends AbstractProvider implements ProviderInterface
             'next' => $this->redirectUrl,
         ];
 
+        // TODO(nicolai): Find out if this provider should be stateless.
+        //                If not, remove this.
         if ($this->usesState()) {
             $fields['state'] = $state;
         }
@@ -95,7 +98,8 @@ class GeekEventsProvider extends AbstractProvider implements ProviderInterface
         return (new User)->setRaw($user)->map([
             'id'       => Arr::get($user, 'id'),
             'nickname' => Arr::get($user, 'username'),
-            'name'     => Arr::get($user, 'first_name') . ' ' . Arr::get($user, 'last_name'),
+            'name'     => Arr::get($user, 'first_name')
+                .' '.Arr::get($user, 'last_name'),
             'email'    => Arr::get($user, 'email'),
         ]);
     }

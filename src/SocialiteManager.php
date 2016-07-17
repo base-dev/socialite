@@ -120,7 +120,8 @@ class SocialiteManager extends Manager implements Contracts\Factory
         $config = $this->app['config']['services.twitter'];
 
         return new TwitterProvider(
-            $this->app['request'], new TwitterServer($this->formatConfig($config))
+            $this->app['request'],
+            new TwitterServer($this->formatConfig($config))
         );
     }
 
@@ -134,7 +135,8 @@ class SocialiteManager extends Manager implements Contracts\Factory
         $config = $this->app['config']['services.bitbucket'];
 
         return new BitbucketProvider(
-            $this->app['request'], new BitbucketServer($this->formatConfig($config))
+            $this->app['request'],
+            new BitbucketServer($this->formatConfig($config))
         );
     }
 
@@ -147,8 +149,8 @@ class SocialiteManager extends Manager implements Contracts\Factory
     public function formatConfig(array $config)
     {
         return array_merge([
-            'identifier' => $config['client_id'],
-            'secret' => $config['client_secret'],
+            'identifier'   => $config['client_id'],
+            'secret'       => $config['client_secret'],
             'callback_uri' => $config['redirect'],
         ], $config);
     }

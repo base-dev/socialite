@@ -19,7 +19,8 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase('https://github.com/login/oauth/authorize', $state);
+        return $this->buildAuthUrlFromBase(
+            'https://github.com/login/oauth/authorize', $state);
     }
 
     /**
@@ -37,9 +38,8 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
     {
         $userUrl = 'https://api.github.com/user?access_token='.$token;
 
-        $response = $this->getHttpClient()->get(
-            $userUrl, $this->getRequestOptions()
-        );
+        $response = $this->getHttpClient()
+                         ->get($userUrl, $this->getRequestOptions());
 
         $user = json_decode($response->getBody(), true);
 
@@ -61,9 +61,8 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
         $emailsUrl = 'https://api.github.com/user/emails?access_token='.$token;
 
         try {
-            $response = $this->getHttpClient()->get(
-                $emailsUrl, $this->getRequestOptions()
-            );
+            $response = $this->getHttpClient()
+                             ->get($emailsUrl, $this->getRequestOptions());
         } catch (Exception $e) {
             return;
         }
@@ -81,8 +80,11 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
     protected function mapUserToObject(array $user)
     {
         return (new User)->setRaw($user)->map([
-            'id' => $user['id'], 'nickname' => $user['login'], 'name' => Arr::get($user, 'name'),
-            'email' => Arr::get($user, 'email'), 'avatar' => $user['avatar_url'],
+            'id'       => Arr::get($user, 'id'),
+            'nickname' => Arr::get($user,'login'),
+            'name'     => Arr::get($user, 'name'),
+            'email'    => Arr::get($user, 'email'),
+            'avatar'   => Arr::get($user, 'avatar_url'),
         ]);
     }
 

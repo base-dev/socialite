@@ -54,7 +54,8 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase('https://www.facebook.com/'.$this->version.'/dialog/oauth', $state);
+        return $this->buildAuthUrlFromBase(
+            'https://www.facebook.com/'.$this->version.'/dialog/oauth', $state);
     }
 
     /**
@@ -70,7 +71,9 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      */
     public function getAccessTokenResponse($code)
     {
-        $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'form_params' : 'body';
+        $postKey = (version_compare(ClientInterface::VERSION, '6') === 1)
+                   ? 'form_params'
+                   : 'body';
 
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
             $postKey => $this->getTokenFields($code),
@@ -88,7 +91,8 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token)
     {
-        $meUrl = $this->graphUrl.'/'.$this->version.'/me?access_token='.$token.'&fields='.implode(',', $this->fields);
+        $meUrl = $this->graphUrl.'/'.$this->version.'/me?access_token='
+            .$token.'&fields='.implode(',', $this->fields);
 
         if (! empty($this->clientSecret)) {
             $appSecretProof = hash_hmac('sha256', $token, $this->clientSecret);
@@ -110,13 +114,17 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      */
     protected function mapUserToObject(array $user)
     {
-        $avatarUrl = $this->graphUrl.'/'.$this->version.'/'.$user['id'].'/picture';
+        $avatarUrl = $this->graphUrl.'/'.$this->version.'/'
+                     .Arr::get($user, 'id').'/picture';
 
         return (new User)->setRaw($user)->map([
-            'id' => $user['id'], 'nickname' => null, 'name' => isset($user['name']) ? $user['name'] : null,
-            'email' => isset($user['email']) ? $user['email'] : null, 'avatar' => $avatarUrl.'?type=normal',
-            'avatar_original' => $avatarUrl.'?width=1920',
-            'profileUrl' => isset($user['link']) ? $user['link'] : null,
+            'id'         => Arr::get($user, 'id'),
+            'nickname'   => null,
+            'name'       => Arr::get($user, 'name'),
+            'email'      => Arr::get($user, 'email'),
+            'profileUrl' => Arr::get($user, 'link'),
+            'avatar'     => $avatarUrl.'?type=normal',
+            'avatar_original' => $avatarUrl.'?width=1920'
         ]);
     }
 

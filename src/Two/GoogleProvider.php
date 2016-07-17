@@ -29,7 +29,8 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase('https://accounts.google.com/o/oauth2/auth', $state);
+        return $this->buildAuthUrlFromBase(
+            'https://accounts.google.com/o/oauth2/auth', $state);
     }
 
     /**
@@ -48,9 +49,8 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getTokenFields($code)
     {
-        return array_add(
-            parent::getTokenFields($code), 'grant_type', 'authorization_code'
-        );
+        return array_add(parent::getTokenFields($code),
+                         'grant_type', 'authorization_code');
     }
 
     /**
@@ -58,15 +58,16 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get('https://www.googleapis.com/plus/v1/people/me?', [
-            'query' => [
-                'prettyPrint' => 'false',
-            ],
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer '.$token,
-            ],
-        ]);
+        $response = $this->getHttpClient()
+                    ->get('https://www.googleapis.com/plus/v1/people/me?', [
+                        'query' => [
+                            'prettyPrint' => 'false',
+                        ],
+                        'headers' => [
+                            'Accept' => 'application/json',
+                            'Authorization' => 'Bearer '.$token,
+                        ],
+                    ]);
 
         return json_decode($response->getBody(), true);
     }
@@ -77,8 +78,12 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
     protected function mapUserToObject(array $user)
     {
         return (new User)->setRaw($user)->map([
-            'id' => $user['id'], 'nickname' => Arr::get($user, 'nickname'), 'name' => $user['displayName'],
-            'email' => $user['emails'][0]['value'], 'avatar' => Arr::get($user, 'image')['url'],
+            'id'       => Arr::get($user, 'id'),
+            'nickname' => Arr::get($user, 'nickname'),
+            'name'     => Arr::get($user, 'displayName'),
+            // TODO(nicolai): check if these are safe
+            'email'    => Arr::get($user, 'emails')[0]['value'],
+            'avatar'   => Arr::get($user, 'image')['url'],
         ]);
     }
 }

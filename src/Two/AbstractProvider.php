@@ -94,8 +94,9 @@ abstract class AbstractProvider implements ProviderContract
     public function __construct(Request $request, $clientId, $clientSecret, $redirectUrl)
     {
         $this->request = $request;
-        $this->clientId = $clientId;
         $this->redirectUrl = $redirectUrl;
+
+        $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
     }
 
@@ -155,7 +156,8 @@ abstract class AbstractProvider implements ProviderContract
      */
     protected function buildAuthUrlFromBase($url, $state)
     {
-        return $url.'?'.http_build_query($this->getCodeFields($state), '', '&', $this->encodingType);
+        return $url.'?'.http_build_query($this->getCodeFields($state),
+                                         '', '&', $this->encodingType);
     }
 
     /**
@@ -167,8 +169,10 @@ abstract class AbstractProvider implements ProviderContract
     protected function getCodeFields($state = null)
     {
         $fields = [
-            'client_id' => $this->clientId, 'redirect_uri' => $this->redirectUrl,
-            'scope' => $this->formatScopes($this->scopes, $this->scopeSeparator),
+            'client_id'     => $this->clientId,
+            'redirect_uri'  => $this->redirectUrl,
+            'scope'         => $this->formatScopes($this->scopes,
+                                                   $this->scopeSeparator),
             'response_type' => 'code',
         ];
 
@@ -202,13 +206,13 @@ abstract class AbstractProvider implements ProviderContract
 
         $response = $this->getAccessTokenResponse($this->getCode());
 
-        $user = $this->mapUserToObject($this->getUserByToken(
-            $token = Arr::get($response, 'access_token')
-        ));
+        $token = Arr::get($response, 'access_token');
+        $user = $this->getUserByToken($token);
+        $userObj = $this->mapUserToObject($user);
 
-        return $user->setToken($token)
-                    ->setRefreshToken(Arr::get($response, 'refresh_token'))
-                    ->setExpiresIn(Arr::get($response, 'expires_in'));
+        return $userObj->setToken($token)
+                       ->setRefreshToken(Arr::get($response, 'refresh_token'))
+                       ->setExpiresIn(Arr::get($response, 'expires_in'));
     }
 
     /**
@@ -219,9 +223,10 @@ abstract class AbstractProvider implements ProviderContract
      */
     public function userFromToken($token)
     {
-        $user = $this->mapUserToObject($this->getUserByToken($token));
+        $user = $this->getUserByToken($token);
+        $userObj = $this->mapUserToObject($user);
 
-        return $user->setToken($token);
+        return $userObj->setToken($token);
     }
 
     /**
@@ -237,7 +242,8 @@ abstract class AbstractProvider implements ProviderContract
 
         $state = $this->request->session()->pull('state');
 
-        return ! (strlen($state) > 0 && $this->request->input('state') === $state);
+        return ! (strlen($state) > 0
+                  && $this->request->input('state') === $state);
     }
 
     /**
@@ -248,11 +254,13 @@ abstract class AbstractProvider implements ProviderContract
      */
     public function getAccessTokenResponse($code)
     {
-        $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'form_params' : 'body';
+        $postKey = (version_compare(ClientInterface::VERSION, '6') === 1)
+                   ? 'form_params'
+                   : 'body';
 
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
             'headers' => ['Accept' => 'application/json'],
-            $postKey => $this->getTokenFields($code),
+            $postKey  => $this->getTokenFields($code),
         ]);
 
         return json_decode($response->getBody(), true);
@@ -267,8 +275,10 @@ abstract class AbstractProvider implements ProviderContract
     protected function getTokenFields($code)
     {
         return [
-            'client_id' => $this->clientId, 'client_secret' => $this->clientSecret,
-            'code' => $code, 'redirect_uri' => $this->redirectUrl,
+            'client_id'     => $this->clientId,
+            'client_secret' => $this->clientSecret,
+            'code'          => $code,
+            'redirect_uri'  => $this->redirectUrl,
         ];
     }
 

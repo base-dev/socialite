@@ -42,13 +42,18 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
+
     public function redirect()
     {
+        $temp_credentials = $this->server->getTemporaryCredentials();
+
         $this->request->session()->set(
-            'oauth.temp', $temp = $this->server->getTemporaryCredentials()
+            'oauth.temp',
+            $temp_credentials
         );
 
-        return new RedirectResponse($this->server->getAuthorizationUrl($temp));
+        return new RedirectResponse(
+            $this->server->getAuthorizationUrl($temp_credentials));
     }
 
     /**
@@ -63,14 +68,19 @@ abstract class AbstractProvider implements ProviderContract
             throw new InvalidArgumentException('Invalid request. Missing OAuth verifier.');
         }
 
-        $user = $this->server->getUserDetails($token = $this->getToken());
+        $token = $this->getToken();
+        $user = $this->server->getUserDetails($token);
 
+        // TODO(nicolai): This code is broken. $user->extra isn't a thing.
         $instance = (new User)->setRaw($user->extra)
                 ->setToken($token->getIdentifier(), $token->getSecret());
 
         return $instance->map([
-            'id' => $user->uid, 'nickname' => $user->nickname,
-            'name' => $user->name, 'email' => $user->email, 'avatar' => $user->imageUrl,
+            'id'       => $user->uid,
+            'nickname' => $user->nickname,
+            'name'     => $user->name,
+            'email'    => $user->email,
+            'avatar'   => $user->imageUrl,
         ]);
     }
 
@@ -84,7 +94,9 @@ abstract class AbstractProvider implements ProviderContract
         $temp = $this->request->session()->get('oauth.temp');
 
         return $this->server->getTokenCredentials(
-            $temp, $this->request->get('oauth_token'), $this->request->get('oauth_verifier')
+            $temp,
+            $this->request->get('oauth_token'),
+            $this->request->get('oauth_verifier')
         );
     }
 
@@ -95,7 +107,8 @@ abstract class AbstractProvider implements ProviderContract
      */
     protected function hasNecessaryVerifier()
     {
-        return $this->request->has('oauth_token') && $this->request->has('oauth_verifier');
+        return $this->request->has('oauth_token')
+            && $this->request->has('oauth_verifier');
     }
 
     /**

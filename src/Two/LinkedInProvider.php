@@ -11,7 +11,10 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
      *
      * @var array
      */
-    protected $scopes = ['r_basicprofile', 'r_emailaddress'];
+    protected $scopes = [
+        'r_basicprofile',
+        'r_emailaddress'
+    ];
     
     /**
      * The separating character for the requested scopes.
@@ -36,7 +39,8 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase('https://www.linkedin.com/oauth/v2/authorization', $state);
+        return $this->buildAuthUrlFromBase(
+            'https://www.linkedin.com/oauth/v2/authorization', $state);
     }
 
     /**
@@ -55,7 +59,8 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getTokenFields($code)
     {
-        return parent::getTokenFields($code) + ['grant_type' => 'authorization_code'];
+        return parent::getTokenFields($code)
+               + ['grant_type' => 'authorization_code'];
     }
 
     /**
@@ -69,7 +74,7 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
 
         $response = $this->getHttpClient()->get($url, [
             'headers' => [
-                'x-li-format' => 'json',
+                'x-li-format'   => 'json',
                 'Authorization' => 'Bearer '.$token,
             ],
         ]);
@@ -83,8 +88,11 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
     protected function mapUserToObject(array $user)
     {
         return (new User)->setRaw($user)->map([
-            'id' => $user['id'], 'nickname' => null, 'name' => Arr::get($user, 'formattedName'),
-            'email' => Arr::get($user, 'emailAddress'), 'avatar' => Arr::get($user, 'pictureUrl'),
+            'id'       => Arr::get($user, 'id'),
+            'nickname' => null,
+            'name'     => Arr::get($user, 'formattedName'),
+            'email'    => Arr::get($user, 'emailAddress'),
+            'avatar'   => Arr::get($user, 'pictureUrl'),
             'avatar_original' => Arr::get($user, 'pictureUrls.values.0'),
         ]);
     }
