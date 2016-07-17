@@ -78,13 +78,22 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
      */
     protected function mapUserToObject(array $user)
     {
+        $userEmail = Arr::get($user, 'emails');
+        if (! is_null($userEmail)) {
+            $user['email'] = $userEmail[0]['value'];
+        }
+
+        $userAvatar = Arr::get($user, 'avatar');
+        if (! is_null($userAvatar)) {
+            $user['avatar'] = $userAvatar['url'];
+        }
+
         return (new User)->setRaw($user)->map([
             'id'       => Arr::get($user, 'id'),
             'nickname' => Arr::get($user, 'nickname'),
             'name'     => Arr::get($user, 'displayName'),
-            // TODO(nicolai): check if these are safe
-            'email'    => Arr::get($user, 'emails')[0]['value'],
-            'avatar'   => Arr::get($user, 'image')['url'],
+            'email'    => Arr::get($user, 'email'),
+            'avatar'   => Arr::get($user, 'avatar')
         ]);
     }
 }
