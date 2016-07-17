@@ -33,7 +33,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
         $config = $this->app['config']['services.github'];
 
         return $this->buildProvider(
-            'Laravel\Socialite\Two\GithubProvider', $config
+            Two\GithubProvider::class, $config
         );
     }
 
@@ -47,7 +47,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
         $config = $this->app['config']['services.facebook'];
 
         return $this->buildProvider(
-            'Laravel\Socialite\Two\FacebookProvider', $config
+            Two\FacebookProvider::class, $config
         );
     }
 
@@ -61,7 +61,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
         $config = $this->app['config']['services.google'];
 
         return $this->buildProvider(
-            'Laravel\Socialite\Two\GoogleProvider', $config
+            Two\GoogleProvider::class, $config
         );
     }
 
@@ -75,7 +75,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
         $config = $this->app['config']['services.linkedin'];
 
         return $this->buildProvider(
-          'Laravel\Socialite\Two\LinkedInProvider', $config
+          Two\LinkedInProvider::class, $config
         );
     }
 
@@ -89,7 +89,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
         $config = $this->app['config']['services.geekevents'];
 
         return $this->buildProvider(
-          'Laravel\Socialite\GeekEventsProvider', $config
+          GeekEventsProvider::class, $config
         );
     }
 

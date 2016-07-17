@@ -3,6 +3,7 @@
 namespace Laravel\Socialite;
 
 use Illuminate\Support\ServiceProvider;
+use Laravel\Socialite\Contracts\Factory as FactoryContract;
 
 class SocialiteServiceProvider extends ServiceProvider
 {
@@ -20,7 +21,7 @@ class SocialiteServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('Laravel\Socialite\Contracts\Factory',
+        $this->app->singleton(FactoryContract::class,
             function ($app) {
                 return new SocialiteManager($app);
         });
@@ -33,6 +34,6 @@ class SocialiteServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['Laravel\Socialite\Contracts\Factory'];
+        return [FactoryContract::class];
     }
 }

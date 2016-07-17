@@ -41,6 +41,6 @@ class OAuthTwoTestProviderStub extends AbstractProvider
             return $this->http;
         }
 
-        return $this->http = m::mock('StdClass');
+        return $this->http = m::mock(StdClass::class);
     }
 }
