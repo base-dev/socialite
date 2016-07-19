@@ -22,6 +22,11 @@ this repository currently is unstable**. Until someone, other than the owners,
 contributes or stars the repo we will assume no one is using it, which means
 we probably won't cut a release until this is about to go into production code.
 
+Required **PHP version: >=5.5**. Laravel/socialite supports 5.4, we don't
+because we use [class name resolution via ::class](http://php.net/manual/en/migration55.new-features.php#migration55.new-features.class-name).
+The Laravel framework does also use this feature, so if you're using a recent
+version of Laravel you should be okay.
+
 
 ## Usage
 
