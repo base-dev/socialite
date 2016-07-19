@@ -3,6 +3,7 @@
 namespace Laravel\Socialite;
 
 use Illuminate\Support\ServiceProvider;
+
 use Laravel\Socialite\Contracts\Factory as FactoryContract;
 
 class SocialiteServiceProvider extends ServiceProvider

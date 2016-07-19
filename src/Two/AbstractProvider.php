@@ -3,11 +3,12 @@
 namespace Laravel\Socialite\Two;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use GuzzleHttp\ClientInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
 use Laravel\Socialite\Contracts\ProviderInterface;
 
 abstract class AbstractProvider implements ProviderInterface

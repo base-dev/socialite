@@ -2,15 +2,16 @@
 
 namespace Tests;
 
-use Mockery as m;
-use Illuminate\Http\Request;
-use Laravel\Socialite\Two\User;
 use GuzzleHttp\ClientInterface;
+use Illuminate\Http\Request;
+use Mockery as m;
 use PHPUnit_Framework_TestCase;
-use Tests\Fixtures\FacebookTestProviderStub;
-use Tests\Fixtures\OAuthTwoTestProviderStub;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Tests\Fixtures\FacebookTestProviderStub;
+use Tests\Fixtures\OAuthTwoTestProviderStub;
+
+use Laravel\Socialite\Two\User;
 
 class OAuthTwoTest extends PHPUnit_Framework_TestCase
 {

@@ -2,14 +2,15 @@
 
 namespace Tests;
 
-use Mockery as m;
-use League\OAuth1\Client;
 use Illuminate\Http\Request;
-use Laravel\Socialite\One\User;
+use League\OAuth1\Client;
+use Mockery as m;
 use PHPUnit_Framework_TestCase;
-use Tests\Fixtures\OAuthOneTestProviderStub;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+use Tests\Fixtures\OAuthOneTestProviderStub;
+use Laravel\Socialite\One\User;
 
 class OAuthOneTest extends PHPUnit_Framework_TestCase
 {

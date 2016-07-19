@@ -3,6 +3,7 @@
 namespace Laravel\Socialite\Facades;
 
 use Illuminate\Support\Facades\Facade;
+
 use Laravel\Socialite\Contracts\Factory;
 
 /**
