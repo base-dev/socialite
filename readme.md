@@ -128,8 +128,10 @@ all existing scopes:
 
 ```php
 return Socialite::driver('github')
-            ->scopes(['scope1', 'scope2'])->redirect();
+            ->setScopes(['scope1', 'scope2'])->redirect();
 ```
+
+*NOTE: `setScopes` is called `scopes` in laravel/socialite.*
 
 Of course, you will need to define routes to your controller methods:
 

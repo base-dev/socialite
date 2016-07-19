@@ -299,7 +299,7 @@ abstract class AbstractProvider implements ProviderInterface
      * @param  array  $scopes
      * @return $this
      */
-    public function scopes(array $scopes)
+    public function setScopes(array $scopes)
     {
         $this->scopes = array_unique(array_merge($this->scopes, $scopes));
 
@@ -322,7 +322,7 @@ abstract class AbstractProvider implements ProviderInterface
      * @param  string  $url
      * @return $this
      */
-    public function redirectUrl($url)
+    public function setRedirectUrl($url)
     {
         $this->redirectUrl = $url;
 

@@ -154,7 +154,7 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      * @param  array  $fields
      * @return $this
      */
-    public function fields(array $fields)
+    public function setFields(array $fields)
     {
         $this->fields = $fields;
 
