@@ -30,9 +30,18 @@ version of Laravel you should be okay.
 
 ## Usage
 
-Add Socialite as a dependency to your `composer.json` file:
+Add Socialite as a dependency to your `composer.json` file, and add a
+`repositories` block to use this fork:
 
-    composer require base-dev/socialite
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/base-dev/socialite"
+        }
+    ],
+    "require": {
+        "laravel/socialite": "^2.0"
+    },
 
 **This is the only place you will need to reference the `base-dev` name. The
 package registers under the Laravel name, so `use` statements will use Laravel,
