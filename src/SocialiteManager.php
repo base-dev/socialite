@@ -102,7 +102,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
         $config = $this->app['config']['services.bitbucket'];
 
         return $this->buildProvider(
-          Laravel\Socialite\Two\BitbucketProvider::class, $config
+          Two\BitbucketProvider::class, $config
         );
     }
 

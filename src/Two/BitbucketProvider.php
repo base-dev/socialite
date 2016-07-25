@@ -4,6 +4,9 @@ namespace Laravel\Socialite\Two;
 
 use Exception;
 use GuzzleHttp\ClientInterface;
+use Illuminate\Support\Arr;
+
+use Laravel\Socialite\Contracts\ProviderInterface;
 
 class BitbucketProvider extends AbstractProvider implements ProviderInterface
 {
@@ -25,7 +28,8 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase('https://bitbucket.org/site/oauth2/authorize', $state);
+        return $this->buildAuthUrlFromBase(
+            'https://bitbucket.org/site/oauth2/authorize', $state);
     }
 
     /**
@@ -42,9 +46,7 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     protected function getUserByToken($token)
     {
         $userUrl = 'https://api.bitbucket.org/2.0/user?access_token='.$token;
-
         $response = $this->getHttpClient()->get($userUrl);
-
         $user = json_decode($response->getBody(), true);
 
         if (in_array('email', $this->scopes)) {
@@ -71,9 +73,10 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
         }
 
         $emails = json_decode($response->getBody(), true);
-
         foreach ($emails['values'] as $email) {
-            if ($email['type'] == 'email' && $email['is_primary'] && $email['is_confirmed']) {
+            if ($email['type'] == 'email'
+                && $email['is_primary']
+                && $email['is_confirmed']) {
                 return $email['email'];
             }
         }
@@ -85,9 +88,11 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     protected function mapUserToObject(array $user)
     {
         return (new User)->setRaw($user)->map([
-            'id' => $user['uuid'], 'nickname' => $user['username'],
-            'name' => array_get($user, 'display_name'), 'email' => array_get($user, 'email'),
-            'avatar' => array_get($user, 'links.avatar.href'),
+            'id'       => Arr::get($user, 'uuid'),
+            'nickname' => Arr::get($user, 'username'),
+            'name'     => Arr::get($user, 'display_name'),
+            'email'    => Arr::get($user, 'email'),
+            'avatar'   => Arr::get($user, 'links.avatar.href'),
         ]);
     }
 
@@ -99,12 +104,14 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
      */
     public function getAccessToken($code)
     {
-        $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'form_params' : 'body';
+        $postKey = (version_compare(ClientInterface::VERSION, '6') === 1)
+            ? 'form_params'
+            : 'body';
 
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-            'auth' => [$this->clientId, $this->clientSecret],
+            'auth'    => [$this->clientId, $this->clientSecret],
             'headers' => ['Accept' => 'application/json'],
-            $postKey => $this->getTokenFields($code),
+            $postKey  => $this->getTokenFields($code),
         ]);
 
         return $this->parseAccessToken($response->getBody());
