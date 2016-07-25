@@ -116,6 +116,7 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     {
         return [
             'code' => $code, 'redirect_uri' => $this->redirectUrl, 'grant_type' => 'authorization_code',
+            'client_id' => $this->clientId, 'client_secret' => $this->clientSecret,
         ];
     }
 }
