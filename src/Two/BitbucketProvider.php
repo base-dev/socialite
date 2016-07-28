@@ -10,6 +10,27 @@ use Laravel\Socialite\Contracts\ProviderInterface;
 
 class BitbucketProvider extends AbstractProvider implements ProviderInterface
 {
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $authUrl = 'https://bitbucket.org/site/oauth2/authorize';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $tokenUrl = 'https://bitbucket.org/site/oauth2/access_token';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $userUrl = 'https://api.bitbucket.org/2.0/user?access_token=';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $emailsUrl = 'https://api.bitbucket.org/2.0/user/emails?access_token=';
+
     /**
      * The scopes being requested.
      *
@@ -28,8 +49,7 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase(
-            'https://bitbucket.org/site/oauth2/authorize', $state);
+        return $this->buildAuthUrlFromBase($this->authUrl, $state);
     }
 
     /**
@@ -37,7 +57,7 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getTokenUrl()
     {
-        return 'https://bitbucket.org/site/oauth2/access_token';
+        return $this->tokenUrl;
     }
 
     /**
@@ -45,7 +65,7 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token)
     {
-        $userUrl = 'https://api.bitbucket.org/2.0/user?access_token='.$token;
+        $userUrl = $this->userUrl . $token;
         $response = $this->getHttpClient()->get($userUrl);
         $user = json_decode($response->getBody(), true);
 
@@ -64,7 +84,7 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getEmailByToken($token)
     {
-        $emailsUrl = 'https://api.bitbucket.org/2.0/user/emails?access_token='.$token;
+        $emailsUrl = $this->emailsUrl . $token;
 
         try {
             $response = $this->getHttpClient()->get($emailsUrl);

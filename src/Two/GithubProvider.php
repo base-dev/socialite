@@ -10,6 +10,26 @@ use Laravel\Socialite\Contracts\ProviderInterface;
 class GithubProvider extends AbstractProvider implements ProviderInterface
 {
     /**
+     * {@inheritdoc}
+     */
+    protected $authUrl = 'https://github.com/login/oauth/authorize';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $tokenUrl = 'https://github.com/login/oauth/access_token';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $userUrl = 'https://api.github.com/user?access_token=';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $emailsUrl = 'https://api.github.com/user/emails?access_token=';
+
+    /**
      * The scopes being requested.
      *
      * @var array
@@ -21,8 +41,7 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase(
-            'https://github.com/login/oauth/authorize', $state);
+        return $this->buildAuthUrlFromBase($this->authUrl, $state);
     }
 
     /**
@@ -30,7 +49,7 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getTokenUrl()
     {
-        return 'https://github.com/login/oauth/access_token';
+        return $this->tokenUrl;
     }
 
     /**
@@ -38,7 +57,7 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token)
     {
-        $userUrl = 'https://api.github.com/user?access_token='.$token;
+        $userUrl = $this->userUrl.$token;
 
         $response = $this->getHttpClient()
                          ->get($userUrl, $this->getRequestOptions());
@@ -60,7 +79,7 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getEmailByToken($token)
     {
-        $emailsUrl = 'https://api.github.com/user/emails?access_token='.$token;
+        $emailsUrl = $this->emailsUrl.$token;
 
         try {
             $response = $this->getHttpClient()

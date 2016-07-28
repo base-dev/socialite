@@ -14,14 +14,31 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      *
      * @var string
      */
-    protected $graphUrl = 'https://graph.facebook.com';
+    protected const GRAPH_URL_BASE = 'https://graph.facebook.com';
 
     /**
      * The Graph API version for the request.
      *
      * @var string
      */
-    protected $version = 'v2.6';
+    protected const GRAPH_VERSION = 'v2.6';
+
+    protected const GRAPH_URL = GRAPH_URL_BASE.'/'.GRAPH_VERSION;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $authUrl = 'https://www.facebook.com/'.GRAPH_VERSION.'/dialog/oauth';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $tokenUrl = GRAPH_URL_BASE.'/oauth/access_token';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $userUrl = GRAPH_URL_BASE.'/me?access_token=';
 
     /**
      * The user fields being requested.
@@ -56,8 +73,7 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase(
-            'https://www.facebook.com/'.$this->version.'/dialog/oauth', $state);
+        return $this->buildAuthUrlFromBase($this->authUrl, $state);
     }
 
     /**
@@ -65,7 +81,7 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getTokenUrl()
     {
-        return $this->graphUrl.'/oauth/access_token';
+        return $this->tokenUrl;
     }
 
     /**
@@ -93,13 +109,10 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token)
     {
-        $meUrl = $this->graphUrl.'/'.$this->version.'/me?access_token='
-            .$token.'&fields='.implode(',', $this->fields);
+        $meUrl = $this->userUrl.$token.'&fields='.implode(',', $this->fields);
 
-        if (! empty($this->clientSecret)) {
-            $appSecretProof = hash_hmac('sha256', $token, $this->clientSecret);
-
-            $meUrl .= '&appsecret_proof='.$appSecretProof;
+        if (!empty($this->clientSecret)) {
+            $meUrl .= '&appsecret_proof='.makeAppSecretProof($token);
         }
 
         $response = $this->getHttpClient()->get($meUrl, [
@@ -111,13 +124,17 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
         return json_decode($response->getBody(), true);
     }
 
+    private function makeAppSecretProof($token) {
+        return hash_hmac('sha256', $token, $this->clientSecret);
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function mapUserToObject(array $user)
     {
-        $avatarUrl = $this->graphUrl.'/'.$this->version.'/'
-                     .Arr::get($user, 'id').'/picture';
+        // TODO(nicolai): Url
+        $avatarUrl = GRAPH_URL.'/'.Arr::get($user, 'id').'/picture';
 
         return (new User)->setRaw($user)->map([
             'id'         => Arr::get($user, 'id'),
