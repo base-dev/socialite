@@ -28,17 +28,17 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected $authUrl = 'https://www.facebook.com/'.GRAPH_VERSION.'/dialog/oauth';
+    protected static $authUrl = 'https://www.facebook.com/'.GRAPH_VERSION.'/dialog/oauth';
 
     /**
      * {@inheritdoc}
      */
-    protected $tokenUrl = GRAPH_URL_BASE.'/oauth/access_token';
+    protected static $tokenUrl = GRAPH_URL_BASE.'/oauth/access_token';
 
     /**
      * {@inheritdoc}
      */
-    protected $userUrl = GRAPH_URL_BASE.'/me?access_token=';
+    protected static  $userUrl = GRAPH_URL_BASE.'/me?access_token=';
 
     /**
      * The user fields being requested.
@@ -67,14 +67,6 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      * @var bool
      */
     protected $reRequest = false;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getAuthUrl($state)
-    {
-        return $this->buildAuthUrlFromBase($this->authUrl, $state);
-    }
 
     /**
      * {@inheritdoc}

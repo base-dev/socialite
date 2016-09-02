@@ -12,22 +12,22 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected $authUrl = 'https://github.com/login/oauth/authorize';
+    protected static $authUrl = 'https://github.com/login/oauth/authorize';
 
     /**
      * {@inheritdoc}
      */
-    protected $tokenUrl = 'https://github.com/login/oauth/access_token';
+    protected static $tokenUrl = 'https://github.com/login/oauth/access_token';
 
     /**
      * {@inheritdoc}
      */
-    protected $userUrl = 'https://api.github.com/user?access_token=';
+    protected static $userUrl = 'https://api.github.com/user?access_token=';
 
     /**
      * {@inheritdoc}
      */
-    protected $emailsUrl = 'https://api.github.com/user/emails?access_token=';
+    protected static $emailsUrl = 'https://api.github.com/user/emails?access_token=';
 
     /**
      * The scopes being requested.
@@ -35,14 +35,6 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
      * @var array
      */
     protected $scopes = ['user:email'];
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getAuthUrl($state)
-    {
-        return $this->buildAuthUrlFromBase($this->authUrl, $state);
-    }
 
     /**
      * {@inheritdoc}

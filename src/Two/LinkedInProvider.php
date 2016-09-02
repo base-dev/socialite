@@ -8,6 +8,22 @@ use Laravel\Socialite\Contracts\ProviderInterface;
 
 class LinkedInProvider extends AbstractProvider implements ProviderInterface
 {
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $authUrl = 'https://www.linkedin.com/oauth/v2/authorization';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $tokenUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $userUrl = 'https://api.linkedin.com/v1/people/';
+
     /**
      * The scopes being requested.
      *
@@ -39,18 +55,9 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getAuthUrl($state)
-    {
-        return $this->buildAuthUrlFromBase(
-            'https://www.linkedin.com/oauth/v2/authorization', $state);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function getTokenUrl()
     {
-        return 'https://www.linkedin.com/oauth/v2/accessToken';
+        return $this->tokenUrl;
     }
 
     /**
@@ -72,7 +79,7 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
     {
         $fields = implode(',', $this->fields);
 
-        $url = 'https://api.linkedin.com/v1/people/~:('.$fields.')';
+        $url = $this->userUrl.'~:('.$fields.')';
 
         $response = $this->getHttpClient()->get($url, [
             'headers' => [

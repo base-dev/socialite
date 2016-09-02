@@ -42,6 +42,11 @@ abstract class AbstractProvider implements ProviderInterface
     protected $clientSecret;
 
     /**
+     * Autorization endpoint
+     */
+    protected static $authUrl;
+
+    /**
      * The redirect URL.
      *
      * @var string
@@ -107,7 +112,11 @@ abstract class AbstractProvider implements ProviderInterface
      * @param  string  $state
      * @return string
      */
-    abstract protected function getAuthUrl($state);
+    protected function getAuthUrl($state)
+    {
+        dd("dritt:\n".self::$authUrl);
+        return $this->buildAuthUrlFromBase(self::$authUrl, $state);
+    }
 
     /**
      * Get the token URL for the provider.

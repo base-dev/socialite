@@ -9,6 +9,21 @@ use Laravel\Socialite\Contracts\ProviderInterface;
 class GoogleProvider extends AbstractProvider implements ProviderInterface
 {
     /**
+     * {@inheritdoc}
+     */
+    protected static $authUrl = 'https://accounts.google.com/o/oauth2/auth';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static $tokenUrl = 'https://accounts.google.com/o/oauth2/token';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static $userUrl = 'https://www.googleapis.com/plus/v1/people/me?';
+
+    /**
      * The separating character for the requested scopes.
      *
      * @var string
@@ -29,18 +44,9 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getAuthUrl($state)
-    {
-        return $this->buildAuthUrlFromBase(
-            'https://accounts.google.com/o/oauth2/auth', $state);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function getTokenUrl()
     {
-        return 'https://accounts.google.com/o/oauth2/token';
+        return $this->tokenUrl;
     }
 
     /**
@@ -61,15 +67,15 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
     protected function getUserByToken($token)
     {
         $response = $this->getHttpClient()
-                    ->get('https://www.googleapis.com/plus/v1/people/me?', [
-                        'query' => [
-                            'prettyPrint' => 'false',
-                        ],
-                        'headers' => [
-                            'Accept' => 'application/json',
-                            'Authorization' => 'Bearer '.$token,
-                        ],
-                    ]);
+                         ->get($this->userUrl, [
+                             'query' => [
+                                 'prettyPrint' => 'false',
+                             ],
+                             'headers' => [
+                                 'Accept' => 'application/json',
+                                 'Authorization' => 'Bearer '.$token,
+                             ],
+                         ]);
 
         return json_decode($response->getBody(), true);
     }
@@ -80,12 +86,12 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
     protected function mapUserToObject(array $user)
     {
         $userEmail = Arr::get($user, 'emails');
-        if (! is_null($userEmail)) {
+        if (!is_null($userEmail)) {
             $user['email'] = $userEmail[0]['value'];
         }
 
         $userAvatar = Arr::get($user, 'avatar');
-        if (! is_null($userAvatar)) {
+        if (!is_null($userAvatar)) {
             $user['avatar'] = $userAvatar['url'];
         }
 

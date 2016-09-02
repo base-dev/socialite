@@ -1,0 +1,26 @@
+From 8c71ebf993e85fc71812fe060cf4b619f2cd2412 Mon Sep 17 00:00:00 2001
+From: Nicolai Skogheim <nicolai.skogheim@gmail.com>
+Date: Tue, 26 Jul 2016 19:36:03 +0200
+Subject: [PATCH] Refactor logic into variable
+
+---
+ src/Two/GithubProvider.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/Two/GithubProvider.php b/src/Two/GithubProvider.php
+index 8767c0a..a424f11 100644
+--- a/src/Two/GithubProvider.php
++++ b/src/Two/GithubProvider.php
+@@ -69,7 +69,8 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
+             return;
+         }
+ 
+-        foreach (json_decode($response->getBody(), true) as $email) {
++        $emails = json_decode($response->getBody(), true);
++        foreach ($emails as $email) {
+             if ($email['primary'] && $email['verified']) {
+                 return $email['email'];
+             }
+-- 
+2.9.2
+

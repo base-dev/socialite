@@ -1,0 +1,34 @@
+Endepunkter kan være en assoc array
+
+Ta det steg for steg?
+1. url'er ut i variabler
+2. url'er må kunne komponeres fra verdier
+    State burde være en ting
+    Et endepunkt kan si at den mangler en bit state
+
+
+Digresjon:
+    Endepunkt består av:
+        en adresse (dette kan deles opp senere)
+        url-komponenter
+            nøkkel - definert av endepunktet
+            verdi - hvordan suppleres dette?
+        
+    Ang. state og supplerte verdier
+        Det ser ut som om disse trenger å defineres eksplisitt
+        Injisering av verdier burde være lett, som et første steg
+        
+    Det virker nå som at det som nå er en konkret provider
+    kan bli et enkelt object som vet hvor den skal sende data,
+    og hva den kan be om. Så trenger man bare et interface mellom
+    disse og en bruker.
+
+    Er det vanskeligere å debugge dette? Det virker som forskjellen
+    er konfigurasjonsorientert programmering og programorientert
+    programmering, aka grunt vs gulp.
+
+
+### Ressurser
+
+Twitch driver:
+https://github.com/0plus1/socialite/commit/abf6609a24519318a586679be9eabc7401ada207

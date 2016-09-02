@@ -14,22 +14,22 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected $authUrl = 'https://bitbucket.org/site/oauth2/authorize';
+    protected static $authUrl = 'https://bitbucket.org/site/oauth2/authorize';
 
     /**
      * {@inheritdoc}
      */
-    protected $tokenUrl = 'https://bitbucket.org/site/oauth2/access_token';
+    protected static $tokenUrl = 'https://bitbucket.org/site/oauth2/access_token';
 
     /**
      * {@inheritdoc}
      */
-    protected $userUrl = 'https://api.bitbucket.org/2.0/user?access_token=';
+    protected static $userUrl = 'https://api.bitbucket.org/2.0/user?access_token=';
 
     /**
      * {@inheritdoc}
      */
-    protected $emailsUrl = 'https://api.bitbucket.org/2.0/user/emails?access_token=';
+    protected static $emailsUrl = 'https://api.bitbucket.org/2.0/user/emails?access_token=';
 
     /**
      * The scopes being requested.
@@ -43,13 +43,9 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
      */
     protected $scopeSeparator = ' ';
 
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getAuthUrl($state)
-    {
-        return $this->buildAuthUrlFromBase($this->authUrl, $state);
+    public function __construct(Request $request, $clientId, $clientSecret, $redirectUrl) {
+// i dont know wat teh fuk im suppose to do now
+        parent($request, $clientId, $clientSecret, $redirectUrl);
     }
 
     /**
